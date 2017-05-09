@@ -285,6 +285,9 @@ exports.handleUnhandledRejections = function (accessToken, options) {
    */
 
   options = options || {};
+  var exitOnUnhandled = options.exitOnUnhandledRejection === undefined ?
+        false : !!options.exitOnUnhandledRejection;
+  delete options.exitOnUnhandledRejection;
 
   exports.init(accessToken, options);
 
@@ -297,6 +300,10 @@ exports.handleUnhandledRejections = function (accessToken, options) {
         if (err) {
           logger.error('Encountered an error while handling an unhandled rejection.');
           logger.error(err);
+        }
+
+        if (exitOnUnhandled) {
+          process.exit(1);
         }
       })
     });
